@@ -1,14 +1,18 @@
-package com.genius.dailystudy;
+package com.genius.binder;
 
 
 public interface IBookManager1 extends android.os.IInterface {
 
-    /** Local-side IPC implementation stub class. */
+    /**
+     * Local-side IPC implementation stub class.
+     */
     public static abstract class Stub extends android.os.Binder implements IBookManager1 {
 
         private static final String DESCRIPTOR = "com.genius.dailystudy.IBookManager1";
 
-        /** Construct the stub at attach it to the interface. */
+        /**
+         * Construct the stub at attach it to the interface.
+         */
         public Stub() {
             this.attachInterface(this, DESCRIPTOR);
         }
@@ -19,13 +23,13 @@ public interface IBookManager1 extends android.os.IInterface {
          */
         public static IBookManager1 asInterface(android.os.IBinder obj) {
 
-            if ((obj==null)) {
+            if ((obj == null)) {
                 return null;
             }
 
             android.os.IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (((iin!=null)&&(iin instanceof IBookManager1))) {
-                return ((IBookManager1)iin);
+            if (((iin != null) && (iin instanceof IBookManager1))) {
+                return ((IBookManager1) iin);
             }
 
             return new Proxy(obj);
@@ -43,21 +47,19 @@ public interface IBookManager1 extends android.os.IInterface {
                     reply.writeString(DESCRIPTOR);
                     return true;
                 }
-                case TRANSACTION_getBookList:
-                {
+                case TRANSACTION_getBookList: {
                     data.enforceInterface(DESCRIPTOR);
                     java.util.List<Book> _result = this.getBookList();
                     reply.writeNoException();
                     reply.writeTypedList(_result);
                     return true;
                 }
-                case TRANSACTION_addBook:
-                {
+                case TRANSACTION_addBook: {
                     data.enforceInterface(DESCRIPTOR);
                     Book _arg0;
-                    if ((0!=data.readInt())) {
+                    if ((0 != data.readInt())) {
                         _arg0 = Book.CREATOR.createFromParcel(data);
-                    }else {
+                    } else {
                         _arg0 = null;
                     }
                     this.addBook(_arg0);
@@ -72,24 +74,22 @@ public interface IBookManager1 extends android.os.IInterface {
         private static class Proxy implements IBookManager1 {
 
             private android.os.IBinder mRemote;
+
             Proxy(android.os.IBinder remote) {
                 mRemote = remote;
             }
 
             @Override
-            public android.os.IBinder asBinder()
-        {
-        return mRemote;
-        }
+            public android.os.IBinder asBinder() {
+                return mRemote;
+            }
 
-            public String getInterfaceDescriptor()
-        {
-        return DESCRIPTOR;
-        }
+            public String getInterfaceDescriptor() {
+                return DESCRIPTOR;
+            }
 
             @Override
-            public java.util.List<Book> getBookList() throws android.os.RemoteException
-            {
+            public java.util.List<Book> getBookList() throws android.os.RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 java.util.List<Book> _result;
@@ -98,8 +98,7 @@ public interface IBookManager1 extends android.os.IInterface {
                     mRemote.transact(Stub.TRANSACTION_getBookList, _data, _reply, 0);
                     _reply.readException();
                     _result = _reply.createTypedArrayList(Book.CREATOR);
-                }
-                finally {
+                } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
@@ -108,23 +107,20 @@ public interface IBookManager1 extends android.os.IInterface {
 
 
             @Override
-            public void addBook(Book book) throws android.os.RemoteException
-            {
+            public void addBook(Book book) throws android.os.RemoteException {
                 android.os.Parcel _data = android.os.Parcel.obtain();
                 android.os.Parcel _reply = android.os.Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(DESCRIPTOR);
-                    if ((book!=null)) {
+                    if ((book != null)) {
                         _data.writeInt(1);
                         book.writeToParcel(_data, 0);
-                    }
-                    else {
+                    } else {
                         _data.writeInt(0);
                     }
                     mRemote.transact(Stub.TRANSACTION_addBook, _data, _reply, 0);
                     _reply.readException();
-                }
-                finally {
+                } finally {
                     _reply.recycle();
                     _data.recycle();
                 }

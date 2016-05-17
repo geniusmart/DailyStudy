@@ -1,4 +1,4 @@
-package com.genius.dailystudy;
+package com.genius.binder;
 
 import android.os.Parcel;
 import android.os.Parcelable;

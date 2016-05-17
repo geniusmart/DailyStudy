@@ -1,6 +1,6 @@
-package com.genius.dailystudy;
+package com.genius.binder;
 
-import com.genius.dailystudy.Book;
+import com.genius.binder.Book;
 
 interface IBookManager {
     List<Book> getBookList();

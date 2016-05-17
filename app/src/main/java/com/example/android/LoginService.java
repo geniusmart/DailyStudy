@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
 
-import com.genius.dailystudy.ILogin;
+import com.genius.binder.ILogin;
 
 public class LoginService extends Service {
 

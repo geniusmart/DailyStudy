@@ -18,7 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.genius.dailystudy.ILogin;
+import com.genius.binder.ILogin;
 
 import java.util.List;
 
