@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -212,5 +213,32 @@ public class RxJavaSampleTest {
                 })
                 .observeOn(Schedulers.computation())
                 .subscribe(subscriber);
+    }
+
+    @Test
+    public void test() {
+        Observable.just(1)
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        System.out.println("doOnSubscribe-->" + Thread.currentThread().getName());
+                    }
+                })
+                .subscribeOn(Schedulers.immediate())//TODO: 为什么只有immediate才可以打印出来
+                .observeOn(Schedulers.newThread())
+                .map(new Func1<Integer, String>() {
+                    @Override
+                    public String call(Integer integer) {
+                        System.out.println(Thread.currentThread().getName());
+                        return "map->" + integer;
+                    }
+                })
+                .observeOn(Schedulers.computation())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        System.out.println(Thread.currentThread().getName() + ":" + s);
+                    }
+                });
     }
 }
