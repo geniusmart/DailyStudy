@@ -32,16 +32,17 @@ public class MainActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName name, IBinder binder) {
 
             // ### aidl onServiceConnected.     service : android.os.BinderProxy
-            Log.e("", TAG+"### aidl onServiceConnected.     service : " + binder.getClass().getName());
+            Log.e(TAG, TAG+"### aidl onServiceConnected.     service : " + binder.getClass().getName());
 
             ILogin login = ILogin.Stub.asInterface(binder);
-
+            IBinder iBinder = login.asBinder();
             //### after asInterface : com.example.advanceandroid.aidl.ILogin$Stub$Proxy
-            Log.e("", TAG+"### after asInterface : " + login.getClass().getName());
+            Log.e(TAG, TAG+"### after asInterface : " + login.getClass().getName());
+            Log.e(TAG, TAG+"### after asBinder : " + iBinder.getClass().getName());
 
             try {
                 //### login : 这是从 com.example.advanceandroid.aidl.LoginService$LoginStubImpl 返回的字符串
-                Log.e("", TAG+"### login : " + login.login());
+                Log.e(TAG, TAG+"### login : " + login.login());
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
