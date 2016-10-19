@@ -3,24 +3,22 @@ package com.genius.rxjava;
 import org.junit.Test;
 
 import java.io.Serializable;
-import java.util.List;
 
 import rx.Observable;
-import rx.Observer;
-import rx.Scheduler;
 import rx.Subscriber;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
-import rx.observers.Observers;
 import rx.schedulers.Schedulers;
+
+import static com.genius.rxjava.Utils.o1;
+import static com.genius.rxjava.Utils.o2;
 
 /**
  * Created by geniusmart on 16/10/7.
  */
 
-public class SimpleTest {
+public class RxJava1 {
 
     @Test
     public void testSimple() {
@@ -190,38 +188,20 @@ public class SimpleTest {
 
 
     @Test
-    public void testMerge(){
+    public void testMerge() {
 
-        Observable<Integer> o1 = Observable.create(new Observable.OnSubscribe<Integer>() {
-            @Override
-            public void call(Subscriber<? super Integer> subscriber) {
-                subscriber.onNext(1);
-                sleep(1000);
-                subscriber.onNext(2);
-                sleep(5000);
-                subscriber.onNext(3);
-            }
-        });
+        Observable.merge(o1, o2)
+                .subscribe(new Action1<Serializable>() {
+                    @Override
+                    public void call(Serializable serializable) {
+                        System.out.println(serializable.toString());
+                    }
+                });
+    }
 
-        Observable<String> o2 = Observable.create(new Observable.OnSubscribe<String>() {
-            @Override
-            public void call(Subscriber<? super String> subscriber) {
-                subscriber.onNext("a");
-                subscriber.onNext("b");
-                subscriber.onNext("c");
-//                subscriber.onNext("d");
-            }
-        });
-
-        Observable.merge(o1,o2)
-            .subscribe(new Action1<Serializable>() {
-                @Override
-                public void call(Serializable serializable) {
-                    System.out.println(serializable.toString());
-                }
-            });
-
-        Observable.zip(o1,o2, new Func2<Integer, String, Object>() {
+    @Test
+    public void testZip(){
+        Observable.zip(o1, o2, new Func2<Integer, String, Object>() {
             @Override
             public Object call(Integer integer, String s) {
                 return integer + s;
@@ -231,12 +211,12 @@ public class SimpleTest {
 
                     @Override
                     public void onStart() {
-                        System.out.println("begin"+System.currentTimeMillis());
+                        System.out.println("begin" + System.currentTimeMillis());
                     }
 
                     @Override
                     public void onCompleted() {
-                        System.out.println("end"+System.currentTimeMillis());
+                        System.out.println("end" + System.currentTimeMillis());
                     }
 
                     @Override
@@ -251,12 +231,14 @@ public class SimpleTest {
                 });
     }
 
-
-    private void sleep(long sec){
-        try {
-            Thread.sleep(sec);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    @Test
+    public void concat(){
+        Observable.concat(o1,o2).subscribe(new Action1<Serializable>() {
+            @Override
+            public void call(Serializable serializable) {
+                System.out.println(serializable);
+            }
+        });
     }
+
 }
