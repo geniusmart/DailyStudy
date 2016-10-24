@@ -45,7 +45,7 @@ public class UserManagerTest {
     }
 
     @Test
-    public void getUser(){
+    public void getUserAllMiss(){
 
         String[] ids = new String[]{"1","2","3"};
 
@@ -67,18 +67,13 @@ public class UserManagerTest {
         verify(mUserApi,times(1)).getUser(ids);
         verify(mDb,times(1)).saveListOfUser(Collections.singletonList(user));
 
-
         verifyNoMoreInteractions(mDb);
         verifyNoMoreInteractions(mUserApi);
-
-        //Mockito.verifyNoMoreInteractions();
-
-        //Collections.singletonList()
 
     }
 
     @Test
-    public void getUser2(){
+    public void getUserAllHit(){
         String[] ids = new String[]{"1","2","3"};
         List<UserManager.User> users = Arrays.asList(new UserManager.User(), new UserManager.User(), new UserManager.User());
         when(mDb.getCache(ids)).thenReturn(users);
@@ -92,5 +87,9 @@ public class UserManagerTest {
         testSubscriber.assertCompleted();
         testSubscriber.assertValueCount(1);
         testSubscriber.assertValue(users);
+
+        verify(mDb,times(1)).getCache(ids);
+        verifyNoMoreInteractions(mDb);
+        verifyNoMoreInteractions(mUserApi);
     }
 }

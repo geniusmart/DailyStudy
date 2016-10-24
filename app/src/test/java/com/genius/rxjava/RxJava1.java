@@ -241,4 +241,28 @@ public class RxJava1 {
         });
     }
 
+    @Test
+    public void doOnXxx(){
+        Observable.just(1)
+                .doOnNext(i->System.out.println("doOnNext"))
+                .doOnCompleted(()->System.out.println("doOnCompleted"))
+                .subscribe(new Subscriber<Integer>() {
+                    @Override
+                    public void onCompleted() {
+                        System.out.println("onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Integer integer) {
+                        System.out.println("onNext");
+                    }
+                });
+    }
+
+
 }
