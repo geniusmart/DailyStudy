@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowLog;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,6 +43,7 @@ public class UserManagerTest {
     public void setup(){
         MockitoAnnotations.initMocks(this);
         userManager = new UserManager(mDb,mUserApi);
+        ShadowLog.stream = System.out;
     }
 
     @Test

@@ -11,8 +11,9 @@ import rx.Observable;
 
 /**
  * Created by geniusmart on 16/10/23.
+ * 案例说明：
+ * http://blog.piasy.com/2016/08/24/Complex-RxJava-1-cache/
  */
-
 public class UserManager {
 
     private Db mDb;
