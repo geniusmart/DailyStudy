@@ -3,6 +3,9 @@ package com.genius.rxjava;
 import org.junit.Test;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -10,6 +13,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
+import rx.schedulers.TestScheduler;
 
 import static com.genius.rxjava.Utils.o1;
 import static com.genius.rxjava.Utils.o2;
@@ -262,6 +266,32 @@ public class RxJava1 {
                         System.out.println("onNext");
                     }
                 });
+    }
+
+    @Test
+    public void timer(){
+        TestScheduler scheduler = new TestScheduler();
+        List<Long> result = new ArrayList<>();
+        //延迟一定时间后执行一次，创建型的操作符
+        Observable.timer(1,TimeUnit.SECONDS,scheduler)
+                .subscribe(result::add);
+
+        scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
+        System.out.println(result);
+    }
+
+    @Test
+    public void interval(){
+        //每隔一段时间执行
+        Observable.interval(10,TimeUnit.SECONDS)
+                .subscribe(System.out::println);
+    }
+
+    @Test
+    public void delay(){
+        //针对数据流进行处理，非创建型操作符
+        Observable.just(1).delay(0,TimeUnit.SECONDS)
+                .subscribe(System.out::println);
     }
 
 

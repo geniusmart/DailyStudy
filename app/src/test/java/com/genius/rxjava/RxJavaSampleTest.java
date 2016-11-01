@@ -135,11 +135,22 @@ public class RxJavaSampleTest {
 
     @Test
     public void lift() {
-        Observable.just(1)
-                .lift(new Observable.Operator<Object, Integer>() {
+        Observable.create(new Observable.OnSubscribe<Integer>() {
+            @Override
+            public void call(Subscriber<? super Integer> subscriber) {
+                subscriber.onNext(1);
+            }
+        })
+                .lift(new Observable.Operator<String, Integer>() {
                     @Override
-                    public Subscriber<? super Integer> call(final Subscriber<? super Object> subscriber) {
+                    public Subscriber<? super Integer> call(final Subscriber<? super String> subscriber) {
                         return new Subscriber<Integer>() {
+
+                            @Override
+                            public void onStart() {
+                                System.out.println("newSubscribe--onStart");
+                            }
+
                             @Override
                             public void onCompleted() {
                                 subscriber.onCompleted();
@@ -152,15 +163,31 @@ public class RxJavaSampleTest {
 
                             @Override
                             public void onNext(Integer integer) {
-                                subscriber.onNext(String.valueOf(integer));
+                                subscriber.onNext(String.valueOf(integer+5)+"-->");
                             }
                         };
                     }
                 })
-                .subscribe(new Action1<Object>() {
+                .subscribe(new Subscriber<String>() {
+
                     @Override
-                    public void call(Object s) {
-                        System.out.println(s.hashCode());
+                    public void onStart() {
+                        System.out.println("subscribe--onStart");
+                    }
+
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        System.out.println(s);
                     }
                 });
     }

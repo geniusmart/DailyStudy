@@ -26,7 +26,11 @@ public class UserManager {
     }
 
     /**
-     * TODO:defer/autoConnect是什么鬼,了解mokito的更多api，了解rule
+     * TODO:defer/autoConnect是什么鬼,
+     * TODO:了解mokito的更多api，了解rule
+     * TODO:flatMap和ConcatMap的交叉？https://rxjava.yuxingxin.com/chapter5/the_map_family.html
+     * TODO：变换-buffer和window
+     * TODO:　Merge的先后顺序？
      * @param ids
      * @return
      */
