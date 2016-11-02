@@ -15,7 +15,7 @@ import rx.schedulers.TestScheduler;
 /**
  * Created by geniusmart on 2016/11/2.
  */
-public class RxMarblesTransforming {
+public class RxMarblesTransformingTest {
 
     private TestScheduler mTestScheduler;
     private List<Object> mList;
