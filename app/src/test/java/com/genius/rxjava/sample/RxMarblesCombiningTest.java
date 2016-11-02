@@ -1,4 +1,4 @@
-package com.genius.rxjava;
+package com.genius.rxjava.sample;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import rx.schedulers.TestScheduler;
 /**
  * Created by geniusmart on 2016/11/1.
  */
-public class RxMarblesTest {
+public class RxMarblesCombiningTest {
 
     private TestScheduler mTestScheduler;
     private List<Object> mList;
@@ -27,13 +27,13 @@ public class RxMarblesTest {
         mList = new ArrayList<>();
     }
 
-    //TODO
     @Test
     public void combineLatest(){
 
         Observable<Integer> observable1 = Observable.create(new Observable.OnSubscribe<Integer>() {
             @Override
             public void call(Subscriber<? super Integer> subscriber) {
+                System.out.println("observable1-->"+Thread.currentThread().getName());
                 subscriber.onNext(1);
                 sleep(500);
                 subscriber.onNext(2);
@@ -43,7 +43,7 @@ public class RxMarblesTest {
                 subscriber.onNext(4);
                 sleep(500);
                 subscriber.onNext(5);
-                System.out.println(Thread.currentThread().getName());
+                subscriber.onCompleted();
             }
         })
                 .subscribeOn(mTestScheduler)
@@ -52,7 +52,7 @@ public class RxMarblesTest {
         Observable<String> observable2 = Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
-                System.out.println(Thread.currentThread().getName());
+                System.out.println("observable2-->"+Thread.currentThread().getName());
                 sleep(250);
                 subscriber.onNext("A");
                 sleep(300);
@@ -61,6 +61,7 @@ public class RxMarblesTest {
                 subscriber.onNext("C");
                 sleep(100);
                 subscriber.onNext("D");
+                subscriber.onCompleted();
             }
         })
                 .subscribeOn(Schedulers.newThread())
@@ -70,8 +71,7 @@ public class RxMarblesTest {
                 (Func2<Integer, String, Object>) (integer, s) -> integer + s)
                 .subscribe(mList::add);
 
-        mTestScheduler.advanceTimeBy(10000,TimeUnit.SECONDS);
-        System.out.println(mList);
+        advanceTimeAndPrint(10000);
     }
 
     @Test
@@ -86,8 +86,7 @@ public class RxMarblesTest {
 
         Observable.concat(observable1,observable2)
                 .subscribe(mList::add);
-        mTestScheduler.advanceTimeBy(100,TimeUnit.SECONDS);
-        System.out.println(mList);
+        advanceTimeAndPrint(100);
     }
 
     @Test
@@ -103,23 +102,54 @@ public class RxMarblesTest {
         Observable.merge(observable1,observable2)
                 .subscribe(mList::add);
 
-        mTestScheduler.advanceTimeBy(100,TimeUnit.SECONDS);
-        System.out.println(mList);
+        advanceTimeAndPrint(100);
     }
 
-    //TODO
+    //TODO 与结果不一样？？？
     @Test
     public void sample(){
-        Observable<Long> observable1 = Observable.interval(5, TimeUnit.SECONDS, mTestScheduler)
-                .skip(1)
-                .take(5);
-        Observable<Character> observable2 = Observable.interval(8, TimeUnit.SECONDS, mTestScheduler)
-                .take(4)
-                .map(aLong -> (char) ('A' + aLong));
+
+        Observable<Integer> observable1 = Observable.create(new Observable.OnSubscribe<Integer>() {
+            @Override
+            public void call(Subscriber<? super Integer> subscriber) {
+                subscriber.onNext(1);
+                sleep(500);
+                subscriber.onNext(2);
+                sleep(500);
+                subscriber.onNext(3);
+                sleep(500);
+                subscriber.onNext(4);
+                sleep(500);
+                subscriber.onNext(5);
+                sleep(500);
+                subscriber.onCompleted();
+            }
+        })
+                .subscribeOn(mTestScheduler)
+                .doOnNext(System.out::println);
+
+        Observable<String> observable2 = Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                sleep(250);
+                subscriber.onNext("A");
+                sleep(300);
+                subscriber.onNext("B");
+                sleep(100);
+                subscriber.onNext("C");
+                sleep(1000);
+                subscriber.onNext("D");
+                subscriber.onCompleted();
+            }
+        })
+                .subscribeOn(Schedulers.newThread())
+                .doOnNext(System.out::println);
+
+
         observable1.sample(observable2)
                 .subscribe(mList::add);
-        mTestScheduler.advanceTimeBy(100,TimeUnit.SECONDS);
-        System.out.println(mList);
+
+        advanceTimeAndPrint(10000);
     }
 
     @Test
@@ -129,17 +159,44 @@ public class RxMarblesTest {
                 .subscribe(System.out::println);
     }
 
-    //TODO
     @Test
     public void withLatestFrom(){
-        Observable.interval(5, TimeUnit.SECONDS, mTestScheduler)
-                .skip(1)
-                .take(5)
-                .delay(10,TimeUnit.SECONDS)
-                .take(3)
+        Observable<Integer> observable1 = Observable.create(new Observable.OnSubscribe<Integer>() {
+            @Override
+            public void call(Subscriber<? super Integer> subscriber) {
+                subscriber.onNext(1);
+                sleep(500);
+                subscriber.onNext(2);
+                sleep(1500);
+                subscriber.onNext(3);
+                sleep(250);
+                subscriber.onNext(4);
+                sleep(500);
+                subscriber.onNext(5);
+            }
+        })
+                .subscribeOn(mTestScheduler)
+                .doOnNext(System.out::println);
+
+        Observable<String> observable2 = Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                sleep(250);
+                subscriber.onNext("A");
+                sleep(300);
+                subscriber.onNext("B");
+                sleep(500);
+                subscriber.onNext("C");
+                sleep(100);
+                subscriber.onNext("D");
+            }
+        })
+                .subscribeOn(Schedulers.newThread())
+                .doOnNext(System.out::println);
+
+        observable1.withLatestFrom(observable2, (integer, s) -> integer + s)
                 .subscribe(mList::add);
-        mTestScheduler.advanceTimeBy(1000,TimeUnit.SECONDS);
-        System.out.println(mList);
+        advanceTimeAndPrint(10000);
 
     }
 
@@ -155,7 +212,11 @@ public class RxMarblesTest {
         Observable.zip(observable1, observable2, (aLong, aChar) -> aLong + String.valueOf(aChar))
                 .subscribe(mList::add);
 
-        mTestScheduler.advanceTimeBy(1000,TimeUnit.SECONDS);
+        advanceTimeAndPrint(1000);
+    }
+
+    private void advanceTimeAndPrint(long delayTime) {
+        mTestScheduler.advanceTimeBy(delayTime, TimeUnit.SECONDS);
         System.out.println(mList);
     }
 
