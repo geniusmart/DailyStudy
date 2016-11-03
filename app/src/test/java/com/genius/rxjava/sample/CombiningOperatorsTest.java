@@ -16,7 +16,7 @@ import rx.schedulers.TestScheduler;
 /**
  * Created by geniusmart on 2016/11/1.
  */
-public class RxMarblesCombiningTest {
+public class CombiningOperatorsTest {
 
     private TestScheduler mTestScheduler;
     private List<Object> mList;

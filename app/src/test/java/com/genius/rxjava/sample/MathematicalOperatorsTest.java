@@ -9,7 +9,7 @@ import rx.observables.MathObservable;
  * Created by geniusmart on 16/11/2.
  */
 
-public class RxMarblesMathematicalTest {
+public class MathematicalOperatorsTest {
 
     //TODO
     @Test

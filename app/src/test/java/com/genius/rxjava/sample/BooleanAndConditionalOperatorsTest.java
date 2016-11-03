@@ -10,7 +10,7 @@ import static android.R.attr.x;
  * Created by geniusmart on 16/11/2.
  */
 
-public class RxMarbiesBooleanTest {
+public class BooleanAndConditionalOperatorsTest {
 
     //RxJs的every操作符相当于RxJava的all
     @Test

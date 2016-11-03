@@ -7,7 +7,7 @@ import rx.Observable;
 /**
  * Created by geniusmart on 2016/11/2.
  */
-public class RxMarbiesFilteringTest {
+public class FilteringOperatorsTest {
 
     @Test
     public void distinct(){
